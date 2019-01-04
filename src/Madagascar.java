@@ -113,13 +113,13 @@ public class Madagascar {
     } // TODO | implement wipe (deletes all storage artifacts to ensure clean run)
 
     private void run() {
-        APIManager API = new APIManager();
-        NetworkingManger Networking = new NetworkingManger();
-        SerializationManager Serialization = new SerializationManager();
-        StorageManger Storage = new StorageManger(storagePath, storageWrite);
+        APIManager API = new APIManager(customLoggingKeyword);
+        NetworkingManger Networking = new NetworkingManger(customLoggingKeyword);
+        SerializationManager Serialization = new SerializationManager(customLoggingKeyword);
+        StorageManger Storage = new StorageManger(storagePath, storageWrite, customLoggingKeyword);
         LoggingManager Logging = new LoggingManager(loggingLevel, customLoggingKeyword);
 
-        Repl repl = new Repl(API, Networking, Serialization, Storage, Logging);
+        Repl repl = new Repl(API, Networking, Serialization, Storage, Logging, customLoggingKeyword);
         boolean brk = !repl.start(); // returns true on successful start & false on faulty start
         while (!brk) {
             brk = repl.tick();
