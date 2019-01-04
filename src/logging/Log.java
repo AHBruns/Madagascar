@@ -6,14 +6,14 @@ public class Log {
     private String msg;
     private String type;
     private int importance;
+    private long nonce; // used to prevent hash collisions of identical logs
 
     // constructors
-    public Log(String _msg, String _type, int _importance) {
-        assert(_msg != null);
-        assert(_type != null);
+    public Log(String _msg, String _type, int _importance, long _nonce) {
         msg = _msg;
         type = _type;
         importance = _importance;
+        nonce = _nonce;
     }
 
     // getters

@@ -31,11 +31,11 @@ public class Repl {
 
     public boolean start() {
         // TODO | implement manager start methods
-        api.start();
-        net.start();
-        serial.start();
-        store.start();
-        log.start();
+//        api.start();
+//        net.start();
+//        serial.start();
+//        store.start();
+//        log.start();
         return true;
     }
 
