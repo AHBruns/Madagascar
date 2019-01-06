@@ -118,7 +118,7 @@ public class Madagascar {
 //        APIManager API = new APIManager(customLoggingKeyword);
 //        NetworkingManger Networking = new NetworkingManger(customLoggingKeyword);
 //        SerializationManager Serialization = new SerializationManager(customLoggingKeyword);
-//        StorageManger Storage = new StorageManger(storagePath, storageWrite, customLoggingKeyword);
+        StorageManger Storage = new StorageManger(storagePath, storageWrite, customLoggingKeyword);
         LoggingManager Logging = new LoggingManager(loggingLevel, customLoggingKeyword);
 
         Logging.addLog(new Log("this is my message", "INFO", 1, rng.nextLong()));

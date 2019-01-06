@@ -3,6 +3,7 @@ package logging;
 
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -14,6 +15,7 @@ public class LoggingManager {
     private Scanner s;
     private Deque<Log> q = new LinkedBlockingDeque<>();
     private HashMap<Log, String> inputs = new HashMap<>();
+    private Random rng = new Random();
 
     // constants
     private static final String ANSI_RESET = "\u001B[0m";
@@ -76,6 +78,8 @@ public class LoggingManager {
     public void printLog() {
         Log next = q.pollFirst();
         if (next == null || next.getImportance() < verbosity) { return; }
+        // TODO | implement log timestamping
+        // TODO | implement log file write functionality
         switch (next.getType()) {
             case "INFO":
                 logInfo(next);
@@ -89,8 +93,11 @@ public class LoggingManager {
             case "QUERY":
                 logQuery(next);
                 break;
-            default:
+            case "ERROR":
                 logError(next);
+                break;
+            default:
+                logMisc(next);
                 break;
         }
     }
@@ -103,15 +110,17 @@ public class LoggingManager {
 
     private void logInfo(Log _l) {
         System.out.println(ANSI_YELLOW + "[INFO][" + _l.getImportance() +  "]  " + _l.getMsg() + ANSI_RESET);
-        // EX: "[INFO] [3] this is the message"
+        // EX: "[INFO][#]  this is the message"
     }
 
     private void logGood(Log _l) {
         System.out.println(ANSI_GREEN +  "[GOOD][" + _l.getImportance() +  "]  " + _l.getMsg() + ANSI_RESET);
+        // EX: "[GOOD][#]  this is the message"
     }
 
     private void logDebug(Log _l) {
         System.out.println(ANSI_PURPLE + "[DEBUG][" + _l.getImportance() + "] " + _l.getMsg() + ANSI_RESET);
+        // EX: "[DEBUG][#] this is the message"
     }
 
     private void logQuery(Log _l) {
@@ -119,10 +128,22 @@ public class LoggingManager {
         System.out.println(ANSI_CYAN +   "[QUERY][" + _l.getImportance() + "] " + _l.getMsg() + ANSI_RESET);
         System.out.print(": ");
         inputs.put(_l, s.nextLine());
+        // EX: "[QUERY][#] this is the message"
+        //     ": "
     }
 
     private void logError(Log _l) {
         System.out.println(ANSI_RED +    "[ERROR][" + _l.getImportance() + "] " + _l.getMsg() + ANSI_RESET);
+        // EX: "[ERROR][#] this is the message"
+    }
+
+    private void logMisc(Log _l) {
+        if (_l != null) {
+            System.out.println(ANSI_RED + "[Misc][" + _l.getImportance() + "]  " + _l.getMsg() + ANSI_RESET);
+            // EX: "[MISC][#]  this is the message"
+        } else {
+            logError(new Log("null log print attempt.", "ERROR", 0, rng.nextLong()));
+        }
     }
 
     // helpers
