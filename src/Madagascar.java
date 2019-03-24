@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.lang.*;
 import java.util.*;
 
@@ -41,7 +42,7 @@ public class Madagascar {
 
     // data members
     private ArrayList<String> commandLineArgs = new ArrayList<>();
-    private String storagePath = "/"; // defaults to the working directory
+    private String storagePath = "database.db"; // defaults to the working directory
     private int loggingLevel = 1; // 0 means no logging, 5 means maximum verbosity
     private boolean storageWrite = true; // toggled to control if Madagascar writes to storage or not
     private String customLoggingKeyword = ""; // keyword used to allow for codebase modification logging statements to trigger via the CL
@@ -114,15 +115,23 @@ public class Madagascar {
 
     } // TODO | implement wipe (deletes all storage artifacts to ensure clean run)
 
-    private void run() {
+    private void run() throws IOException {
 //        APIManager API = new APIManager(customLoggingKeyword);
 //        NetworkingManger Networking = new NetworkingManger(customLoggingKeyword);
 //        SerializationManager Serialization = new SerializationManager(customLoggingKeyword);
         StorageManger Storage = new StorageManger(storagePath, storageWrite, customLoggingKeyword);
         LoggingManager Logging = new LoggingManager(loggingLevel, customLoggingKeyword);
-
+        System.out.println("logging test");
         Logging.addLog(new Log("this is my message", "INFO", 1, rng.nextLong()));
         Logging.printAllLogs();
+        System.out.println("storage test");
+        Storage.openDB();
+        Storage.writeBlock(new byte[100]);
+        Storage.printSize();
+        Storage.writeBlock(new byte[50]);
+        Storage.printSize();
+        Storage.rollback(1);
+        Storage.printSize();
 
         // Repl repl = new Repl(API, Networking, Serialization, Storage, Logging, customLoggingKeyword);
 //        boolean brk = !repl.start(); // returns true on successful start & false on faulty start
